@@ -49,6 +49,17 @@ typedef struct
 #define USART2_BASE 0x40004400U
 #define USART2 ((USART_TypeDef *)(USART2_BASE))
 
+#define USART2_AF 7
+#define USART2_RX_PIN 3
+#define USART2_TX_PIN 2
+
+#define USART_CR1_TE (1 << 3)
+#define USART_CR1_RE (1 << 2)
+#define USART_CR1_UE (1 << 13)
+#define USART_SR_TXE (1 << 8)
+#define USART_SR_RXNE (1 << 6)
+
+
 typedef struct
 {
     volatile uint32_t MODER;
@@ -82,14 +93,6 @@ typedef struct
 #define RCC_GPIOD_CLK_ENABLE() (RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN)
 
 #define RCC_USART2_CLK_ENABLE() (RCC->APB1ENR |= RCC_APB1ENR_USART2EN)
-
-#define USART2_AF 7
-#define USART2_RX_PIN 3
-#define USART2_TX_PIN 2
-
-#define USART_CR1_TE (1 << 3)
-#define USART_CR1_RE (1 << 2)
-#define USART_CR1_UE (1 << 13)
 
 typedef enum
 {

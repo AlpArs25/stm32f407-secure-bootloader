@@ -1,0 +1,31 @@
+# Build artifacts
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.lst
+build/
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+compile_commands.json
+.cache/
+
+# Debug
+*.gdb_history
+.gdbinit
+openocd.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Never commit signing keys (stage 5)
+*.pem
+*.key
+private_key*

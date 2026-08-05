@@ -2,6 +2,7 @@
 
 #include "hal_common.h"
 #include "stm32f407xx.h"
+#include <stddef.h>
 
 typedef struct
 {
@@ -9,5 +10,7 @@ typedef struct
 } USART_Config;
 
 HAL_Status usart_init(USART_TypeDef *usart, USART_Config *cfg);
-HAL_Status usart_write(void);
-HAL_Status usart_read(void);
+HAL_Status usart_write(USART_TypeDef *usart, const char *text);
+HAL_Status usart_write_byte(USART_TypeDef *usart, const char *c);
+HAL_Status usart_read(USART_TypeDef *usart, char *buf, size_t len);
+HAL_Status usart_read_byte(USART_TypeDef *usart, char *c);

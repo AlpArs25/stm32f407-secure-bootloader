@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stddef.h>
 #include "stm32f407xx.h"
 #include "usart.h"
 #include "gpio.h"
@@ -63,12 +64,64 @@ HAL_Status usart_init(USART_TypeDef *usart, USART_Config *cfg)
     return HAL_OK;
 }
 
-HAL_Status usart_write(void)
+HAL_Status usart_write(USART_TypeDef *usart, const char *text)
 {
-    return HAL_TIMEOUT;
+    const char *c = text;
+    while (*c != '\0')
+    {
+        HAL_Status status = usart_write_byte(usart, c);
+        if (status != HAL_OK)
+        {
+            return status;
+        }
+        c++;
+    }
+    return HAL_OK;
 }
 
-HAL_Status usart_read(void)
+HAL_Status usart_write_byte(USART_TypeDef *usart, const char *c)
 {
-    return HAL_TIMEOUT;
+    if (usart == USART2)
+    {
+        while (!(USART2->SR & USART_SR_TXE))
+        {
+            // wait until empty
+        }
+        USART2->DR = *c;
+
+        return HAL_OK;
+    } // rest
+    return HAL_ERROR;
+}
+
+HAL_Status usart_read(USART_TypeDef *usart, char *buf, size_t len)
+{
+    if (len == 0)
+    {
+        return HAL_ERROR;
+    }
+    for (size_t i = 0; i < len - 1; i++)
+    {
+        HAL_Status status = usart_read_byte(usart, &buf[i]);
+        if (status != HAL_OK)
+        {
+            return status;
+        }
+    }
+    buf[len - 1] = '\0';
+    return HAL_OK;
+}
+
+HAL_Status usart_read_byte(USART_TypeDef *usart, char *c)
+{
+    if (usart == USART2)
+    {
+        while (!(USART2->SR & USART_SR_RXNE))
+        {
+            // wait
+        }
+        *c = (char)(USART2->DR & 0xFF);
+        return HAL_OK;
+    }
+    return HAL_ERROR;
 }
