@@ -30,8 +30,8 @@ app.bin: app.elf
 bootloader.bin: bootloader.elf
 	$(OBJCOPY) -O binary --pad-to=0x08020000 --gap-fill=0xff $< $@
 
-bootloader.elf: startup_bl.o
-	$(LD) $(LDFLAGS) startup_bl.o -o $@ -Map=bootloader.map -T bootloader.ld
+bootloader.elf: startup_bl.o bl_main.o
+	$(LD) $(LDFLAGS) $^ -o $@ -Map=bootloader.map -T bootloader.ld
 
 app.elf: $(OBJS) startup_app.o main.o
 	$(LD) $(LDFLAGS) $^ -o $@ -Map=app.map -T app.ld

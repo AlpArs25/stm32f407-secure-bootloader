@@ -56,6 +56,7 @@ SECTIONS
     {
         . = ALIGN(4);
         _sdata = .;
+        KEEP(*(.data.keep .data.keep.*))
         *(.data)
         *(.data*)
         . = ALIGN(4);
