@@ -1,7 +1,7 @@
 MEMORY
 {
-    FLASH (rx)  : ORIGIN = 0x08008000, LENGTH = 128K
-    RAM   (rwx) : ORIGIN = 0x20004000, LENGTH = 64K
+    FLASH (rx)  : ORIGIN = 0x08020000, LENGTH = 128K /* Sector 5 used */
+    RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 32K
 }
 
 ENTRY(Reset_Handler)
@@ -29,6 +29,27 @@ SECTIONS
         _etext = .;
     } >FLASH
 
+    /* Mandatory GCC Sections */
+    .ARM.extab :
+    {
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+    } > FLASH
+
+    .ARM :
+    {
+        __exidx_start = .;
+        *(.ARM.exidx*)
+        __exidx_end = .;
+    } > FLASH
+
+    .init_array :
+    {
+        PROVIDE_HIDDEN(__init_array_start = .);
+        KEEP(*(SORT(.init_array.*)))
+        KEEP(*(.init_array))
+        PROVIDE_HIDDEN(__init_array_end = .);
+    } > FLASH
+
     _sidata = LOADADDR(.data); /* must be defined outside the {} */
 
     .data :
@@ -51,6 +72,8 @@ SECTIONS
         . = ALIGN(4);
         _ebss = .;
     } >RAM
+
+    PROVIDE(_end = .); /* _end may be defined already */
 }
 
-PROVIDE(_end = .); /* _end may be defined already */
+ASSERT(_ebss + 1K <= _estack, "RAM overflow: not enough room for stack") /* Check that we have enough room for stack */

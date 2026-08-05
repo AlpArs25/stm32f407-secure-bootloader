@@ -9,3 +9,5 @@ typedef struct
 } USART_Config;
 
 HAL_Status usart_init(USART_TypeDef *usart, USART_Config *cfg);
+HAL_Status usart_write(void);
+HAL_Status usart_read(void);
