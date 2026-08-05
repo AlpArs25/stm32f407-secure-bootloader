@@ -1,7 +1,7 @@
 MEMORY
 {
     FLASH (rx)  : ORIGIN = 0x08020000, LENGTH = 128K /* Sector 5 used */
-    RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 32K
+    RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
 }
 
 ENTRY(Reset_Handler)

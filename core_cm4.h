@@ -21,13 +21,13 @@ typedef struct
 static inline void nvic_irq_enable(IRQn_Type n)
 {
     uint8_t reg_offset = n / 32;
-    NVIC->ISER[reg_offset] |= 1 << (n % 32);
+    NVIC->ISER[reg_offset] = 1 << (n % 32);
 }
 
 static inline void nvic_irq_disable(IRQn_Type n)
 {
     uint8_t reg_offset = n / 32;
-    NVIC->ICER[reg_offset] |= 1 << (n % 32);
+    NVIC->ICER[reg_offset] = 1 << (n % 32);
 }
 
 static inline void __disable_irq(void)

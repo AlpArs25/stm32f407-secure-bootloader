@@ -273,8 +273,11 @@ int main(void)
     app_end_stack = (*(volatile uint32_t *)(APP_OFFSET));
     app_entry = (void *)(*(volatile uint32_t *)(APP_OFFSET + 0x4));
 
-    asm volatile("msr msp, %0" :: "r"(app_end_stack));
-    asm volatile("mov pc, %0" :: "r"(app_entry));
+    // need one line
+    asm volatile("msr msp, %0 \n bx %1" :: "r"(app_end_stack), "r"(app_entry));
+
+    // asm volatile("msr msp, %0" :: "r"(app_end_stack));
+    // asm volatile("mov pc, %0" :: "r"(app_entry));
 
     while (1) {}
 }

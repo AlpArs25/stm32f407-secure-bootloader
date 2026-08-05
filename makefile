@@ -2,15 +2,24 @@ CROSS_COMPILE := arm-none-eabi-
 CC := $(CROSS_COMPILE)gcc
 LD := $(CROSS_COMPILE)ld
 OBJCOPY := $(CROSS_COMPILE)objcopy
+SIZE := $(CROSS_COMPILE)size
 
 CFLAGS := -mcpu=cortex-m4 -mthumb -g -ggdb -Wall -Wextra -Wmissing-prototypes -ffunction-sections -fdata-sections
 LDFLAGS := --gc-sections -nostdlib
 
-OBJS := gpio.o core_cm4.o rcc.o stm32f407xx.o usart.o
+OBJS := gpio.o core_cm4.o rcc.o stm32f407xx.o usart.o syscalls.o
 
-.PHONY: all clean
+.PHONY: all clean size
 
-all: image.bin
+all: image.bin size
+
+size: app.elf bootloader.elf
+	@echo "----- bootloader.elf -----"
+	@$(SIZE) bootloader.elf
+	@echo "----- app.elf -----"
+	@$(SIZE) app.elf
+	@echo "----- output files -----"
+	@ls -la *.bin *.elf
 
 image.bin: app.bin bootloader.bin
 	cat bootloader.bin app.bin > image.bin
