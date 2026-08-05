@@ -222,7 +222,7 @@ void Default_Handler(void)
     }
 }
 
-int main(void);
+extern int main(void);
 
 void Reset_Handler(void)
 {
