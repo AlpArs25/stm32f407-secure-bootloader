@@ -9,14 +9,15 @@
 
 int main(void)
 {
-    
+
     __enable_irq();
     systick_init(1000);
     HAL_CHECK(led_setup());
-
-    while (1) 
+    HAL_CHECK(usart_init(USART2, &((USART_Config){.baud_rate = 115200})));
+    while (1)
     {
         led_toggle(LED_BLUE);
+        printf("test123");
         delay_ms(1000);
     }
 }

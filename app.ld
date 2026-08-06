@@ -74,6 +74,7 @@ SECTIONS
     } >RAM
 
     PROVIDE(_end = .); /* _end may be defined already */
+    PROVIDE(end = .);  /* newlib's _sbrk() looks up `end`, not `_end` */
 }
 
 ASSERT(_ebss + 1K <= _estack, "RAM overflow: not enough room for stack") /* Check that we have enough room for stack */
