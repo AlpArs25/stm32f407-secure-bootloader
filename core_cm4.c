@@ -3,7 +3,7 @@
 #include "stm32f407xx.h"
 #include "hal_common.h"
 
-static volatile uint32_t uwTick;
+static volatile uint32_t tick_count;
 
 HAL_Status systick_init(uint32_t ticks_per_second)
 {
@@ -17,7 +17,7 @@ HAL_Status systick_init(uint32_t ticks_per_second)
         return HAL_ERROR;
     }
     SYSTICK->VAL = 0;
-    SYSTICK->LOAD = (reload & 0X00FFFFFF);
+    SYSTICK->LOAD = (reload & 0x00FFFFFF);
     SYSTICK->CTRL |= SYSTICK_CTRL_TICKINT | SYSTICK_CTRL_EN;
 
     return HAL_OK;
@@ -32,12 +32,12 @@ void systick_dis(void)
 
 void SysTick_Handler(void)
 {
-    uwTick++;
+    tick_count++;
 }
 
 uint32_t get_tick(void)
 {
-    return uwTick;
+    return tick_count;
 }
 
 void delay_ms(uint32_t ms)

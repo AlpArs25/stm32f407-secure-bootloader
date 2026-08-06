@@ -36,11 +36,8 @@ bootloader.bin: bootloader.elf
 bootloader.elf: startup_bl.o bl_main.o led.o gpio.o core_cm4.o stm32f407xx.o
 	$(LD) $(LDFLAGS) $^ -o $@ -Map=bootloader.map -T bootloader.ld
 
-app.elf: $(OBJS) startup_app.o main.o
+app.elf: $(OBJS) startup_app.o app_main.o
 	$(LD) $(LDFLAGS) $^ -o $@ -Map=app.map -T app.ld
-
-main.o: app.main.c
-	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f *.o *.bin *.elf *.map

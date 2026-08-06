@@ -2,7 +2,7 @@
 #include "stm32f407xx.h"
 #include "rcc.h"
 
-uint32_t hal_rcc_get_pclk1(void)
+uint32_t rcc_get_pclk1(void)
 {
     uint32_t ppre1 = (RCC->CFGR & RCC_CFGR_PPRE1_MASK) >> RCC_CFGR_PPRE1_POS;
 

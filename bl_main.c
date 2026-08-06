@@ -3,9 +3,9 @@
 #include <stdint.h>
 #include "led.h"
 
-#define APP_OFFSET 0x08020000
+#define APP_BASE 0x08020000
 
-const uint32_t * const app_IV = (const uint32_t *)(APP_OFFSET);
+const uint32_t * const app_IV = (const uint32_t *)(APP_BASE);
 
 volatile uint32_t g_bl_version __attribute__((used, section(".data.keep"))) = 0x00010000; // Hacky objcopy fix
 
@@ -15,10 +15,10 @@ int main(void)
     led_setup();
     for(int i = 0; i < 3; i++)
     {
-        led_toggle(ORANGE);
+        led_toggle(LED_ORANGE);
         delay_ms(500);
     }
-    led_off(ORANGE);
+    led_off(LED_ORANGE);
     systick_dis();
 
     void *app_entry;
@@ -30,8 +30,8 @@ int main(void)
     __DSB();
     __ISB();
 
-    app_end_stack = (*(volatile uint32_t *)(APP_OFFSET));
-    app_entry = (void *)(*(volatile uint32_t *)(APP_OFFSET + 0x4));
+    app_end_stack = (*(volatile uint32_t *)(APP_BASE));
+    app_entry = (void *)(*(volatile uint32_t *)(APP_BASE + 0x4));
 
 
     // need one line

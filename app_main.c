@@ -16,7 +16,7 @@ int main(void)
 
     while (1) 
     {
-        led_toggle(BLUE);
+        led_toggle(LED_BLUE);
         delay_ms(1000);
     }
 }

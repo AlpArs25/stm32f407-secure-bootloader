@@ -25,27 +25,27 @@ HAL_Status led_setup(void)
     return HAL_OK;
 }
 
-HAL_Status led_on(LED_COLOR color)
+HAL_Status led_on(LED_Color color)
 {
     switch (color)
     {
-    case GREEN:
-        GPIOD->BSRR = LED_GREEN_EN;
+    case LED_GREEN:
+        GPIOD->BSRR = LED_GREEN_MASK;
         return HAL_OK;
         break;
 
-    case ORANGE:
-        GPIOD->BSRR = LED_ORANGE_EN;
+    case LED_ORANGE:
+        GPIOD->BSRR = LED_ORANGE_MASK;
         return HAL_OK;
         break;
 
-    case RED:
-        GPIOD->BSRR = LED_RED_EN;
+    case LED_RED:
+        GPIOD->BSRR = LED_RED_MASK;
         return HAL_OK;
         break;
 
-    case BLUE:
-        GPIOD->BSRR = LED_BLUE_EN;
+    case LED_BLUE:
+        GPIOD->BSRR = LED_BLUE_MASK;
         return HAL_OK;
         break;
 
@@ -54,27 +54,27 @@ HAL_Status led_on(LED_COLOR color)
     }
 }
 
-HAL_Status led_off(LED_COLOR color)
+HAL_Status led_off(LED_Color color)
 {
     switch (color)
     {
-    case GREEN:
-        GPIOD->BSRR = (LED_GREEN_EN << 16);
+    case LED_GREEN:
+        GPIOD->BSRR = (LED_GREEN_MASK << 16);
         return HAL_OK;
         break;
 
-    case ORANGE:
-        GPIOD->BSRR = (LED_ORANGE_EN << 16);
+    case LED_ORANGE:
+        GPIOD->BSRR = (LED_ORANGE_MASK << 16);
         return HAL_OK;
         break;
 
-    case RED:
-        GPIOD->BSRR = (LED_RED_EN << 16);
+    case LED_RED:
+        GPIOD->BSRR = (LED_RED_MASK << 16);
         return HAL_OK;
         break;
 
-    case BLUE:
-        GPIOD->BSRR = (LED_BLUE_EN << 16);
+    case LED_BLUE:
+        GPIOD->BSRR = (LED_BLUE_MASK << 16);
         return HAL_OK;
         break;
 
@@ -83,27 +83,27 @@ HAL_Status led_off(LED_COLOR color)
     }
 }
 
-HAL_Status led_toggle(LED_COLOR color)
+HAL_Status led_toggle(LED_Color color)
 {
     switch (color)
     {
-    case GREEN:
-        GPIOD->ODR ^= LED_GREEN_EN;
+    case LED_GREEN:
+        GPIOD->ODR ^= LED_GREEN_MASK;
         return HAL_OK;
         break;
 
-    case ORANGE:
-        GPIOD->ODR ^= LED_ORANGE_EN;
+    case LED_ORANGE:
+        GPIOD->ODR ^= LED_ORANGE_MASK;
         return HAL_OK;
         break;
 
-    case RED:
-        GPIOD->ODR ^= LED_RED_EN;
+    case LED_RED:
+        GPIOD->ODR ^= LED_RED_MASK;
         return HAL_OK;
         break;
 
-    case BLUE:
-        GPIOD->ODR ^= LED_BLUE_EN;
+    case LED_BLUE:
+        GPIOD->ODR ^= LED_BLUE_MASK;
         return HAL_OK;
         break;
 

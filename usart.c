@@ -45,7 +45,7 @@ HAL_Status usart_init(USART_TypeDef *usart, USART_Config *cfg)
     }
 
     // BRR calculation
-    uint32_t pclk = hal_rcc_get_pclk1();
+    uint32_t pclk = rcc_get_pclk1();
     uint32_t divisor = 16 * cfg->baud_rate;
     uint32_t mantissa = pclk / divisor;
     uint32_t remainder = pclk % divisor;

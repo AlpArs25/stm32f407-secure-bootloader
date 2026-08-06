@@ -2,4 +2,4 @@
 
 #include <stdint.h>
 
-uint32_t hal_rcc_get_pclk1(void);
+uint32_t rcc_get_pclk1(void);
