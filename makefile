@@ -4,7 +4,7 @@ LD := $(CROSS_COMPILE)ld
 OBJCOPY := $(CROSS_COMPILE)objcopy
 SIZE := $(CROSS_COMPILE)size
 
-CFLAGS := -mcpu=cortex-m4 -mthumb -g -ggdb -Wall -Wextra -Wmissing-prototypes -ffunction-sections -fdata-sections
+CFLAGS := -mcpu=cortex-m4 -mthumb -g -ggdb -Wall -Wextra -Wmissing-prototypes -Werror -ffunction-sections -fdata-sections -MMD -MP
 LDFLAGS := --gc-sections -nostdlib
 
 OBJS := gpio.o core_cm4.o rcc.o stm32f407xx.o usart.o syscalls.o fault.o led.o
@@ -43,7 +43,7 @@ clean:
 	rm -f *.o *.bin *.elf *.map
 
 %.o: %.s
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $< -o $@

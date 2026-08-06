@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
+#include <string.h>
 #include "stm32f407xx.h"
 #include "usart.h"
 #include "gpio.h"
@@ -21,8 +22,8 @@ static HAL_Status usart2_pins_setup(void)
     rx_cfg.mode = GPIO_MODE_AF;
     rx_cfg.pin = USART2_RX_PIN;
 
-    gpio_init(port, &tx_cfg);
-    gpio_init(port, &rx_cfg);
+    HAL_TRY(gpio_init(port, &tx_cfg));
+    HAL_TRY(gpio_init(port, &rx_cfg));
 
     return HAL_OK;
 }
@@ -64,64 +65,50 @@ HAL_Status usart_init(USART_TypeDef *usart, USART_Config *cfg)
     return HAL_OK;
 }
 
-HAL_Status usart_write(USART_TypeDef *usart, const char *text)
+HAL_Status usart_write(USART_TypeDef *usart, const uint8_t *buf, size_t len)
 {
-    const char *c = text;
-    while (*c != '\0')
+    for (size_t i = 0; i < len; i++)
     {
-        HAL_Status status = usart_write_byte(usart, c);
-        if (status != HAL_OK)
-        {
-            return status;
-        }
-        c++;
+        HAL_TRY(usart_write_byte(usart, buf[i]));
     }
     return HAL_OK;
 }
 
-HAL_Status usart_write_byte(USART_TypeDef *usart, const char *c)
+HAL_Status usart_write_str(USART_TypeDef *usart, const char *text)
 {
-    if (usart == USART2)
-    {
-        while (!(USART2->SR & USART_SR_TXE))
-        {
-            // wait until empty
-        }
-        USART2->DR = *c;
-
-        return HAL_OK;
-    } // rest
-    return HAL_ERROR;
+    return usart_write(usart, (const uint8_t *)text, strlen(text));
 }
 
-HAL_Status usart_read(USART_TypeDef *usart, char *buf, size_t len)
+HAL_Status usart_write_byte(USART_TypeDef *usart, const char c)
 {
-    if (len == 0)
+    while (!(usart->SR & USART_SR_TXE))
+    {
+        // wait until empty
+    }
+    usart->DR = c;
+
+    return HAL_OK;
+}
+
+HAL_Status usart_read(USART_TypeDef *usart, uint8_t *buf, size_t len)
+{
+    for (size_t i = 0; i < len - 1; i++)
+    {
+        HAL_TRY(usart_read_byte(usart, &buf[i]));
+    }
+    return HAL_OK;
+}
+
+HAL_Status usart_read_byte(USART_TypeDef *usart, uint8_t *c)
+{
+    while (!(usart->SR & USART_SR_RXNE))
+    {
+        // wait
+    }
+    if (usart->SR & USART_SR_ORE)
     {
         return HAL_ERROR;
     }
-    for (size_t i = 0; i < len - 1; i++)
-    {
-        HAL_Status status = usart_read_byte(usart, &buf[i]);
-        if (status != HAL_OK)
-        {
-            return status;
-        }
-    }
-    buf[len - 1] = '\0';
+    *c = (char)(usart->DR & 0xFF);
     return HAL_OK;
-}
-
-HAL_Status usart_read_byte(USART_TypeDef *usart, char *c)
-{
-    if (usart == USART2)
-    {
-        while (!(USART2->SR & USART_SR_RXNE))
-        {
-            // wait
-        }
-        *c = (char)(USART2->DR & 0xFF);
-        return HAL_OK;
-    }
-    return HAL_ERROR;
 }

@@ -60,6 +60,7 @@ typedef struct
 #define USART_CR1_UE (1 << 13)
 #define USART_SR_TXE (1 << 8)
 #define USART_SR_RXNE (1 << 6)
+#define USART_SR_ORE (1 << 3)
 
 
 typedef struct

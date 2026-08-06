@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include "stm32f407xx.h"
-#include "core_cm4.h"
 #include "hal_common.h"
 #include "gpio.h"
 
@@ -12,6 +11,7 @@ typedef enum
     LED_ORANGE = 1,
     LED_RED = 2,
     LED_BLUE = 3,
+    LED_COUNT,
 } LED_Color;
 
 #define LED_GREEN_MASK (1 << 12)

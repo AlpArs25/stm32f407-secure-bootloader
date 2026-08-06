@@ -25,89 +25,34 @@ HAL_Status led_setup(void)
     return HAL_OK;
 }
 
+static const uint16_t led_mask[] = {LED_GREEN_MASK, LED_ORANGE_MASK, LED_RED_MASK, LED_BLUE_MASK};
+
 HAL_Status led_on(LED_Color color)
 {
-    switch (color)
+    if (color >= LED_COUNT)
     {
-    case LED_GREEN:
-        GPIOD->BSRR = LED_GREEN_MASK;
-        return HAL_OK;
-        break;
-
-    case LED_ORANGE:
-        GPIOD->BSRR = LED_ORANGE_MASK;
-        return HAL_OK;
-        break;
-
-    case LED_RED:
-        GPIOD->BSRR = LED_RED_MASK;
-        return HAL_OK;
-        break;
-
-    case LED_BLUE:
-        GPIOD->BSRR = LED_BLUE_MASK;
-        return HAL_OK;
-        break;
-
-    default:
         return HAL_ERROR;
     }
+    GPIOD->BSRR = led_mask[color];
+    return HAL_OK;
 }
 
 HAL_Status led_off(LED_Color color)
 {
-    switch (color)
+    if (color >= LED_COUNT)
     {
-    case LED_GREEN:
-        GPIOD->BSRR = (LED_GREEN_MASK << 16);
-        return HAL_OK;
-        break;
-
-    case LED_ORANGE:
-        GPIOD->BSRR = (LED_ORANGE_MASK << 16);
-        return HAL_OK;
-        break;
-
-    case LED_RED:
-        GPIOD->BSRR = (LED_RED_MASK << 16);
-        return HAL_OK;
-        break;
-
-    case LED_BLUE:
-        GPIOD->BSRR = (LED_BLUE_MASK << 16);
-        return HAL_OK;
-        break;
-
-    default:
         return HAL_ERROR;
     }
+    GPIOD->BSRR = (led_mask[color] << 16);
+    return HAL_OK;
 }
 
 HAL_Status led_toggle(LED_Color color)
 {
-    switch (color)
+    if (color >= LED_COUNT)
     {
-    case LED_GREEN:
-        GPIOD->ODR ^= LED_GREEN_MASK;
-        return HAL_OK;
-        break;
-
-    case LED_ORANGE:
-        GPIOD->ODR ^= LED_ORANGE_MASK;
-        return HAL_OK;
-        break;
-
-    case LED_RED:
-        GPIOD->ODR ^= LED_RED_MASK;
-        return HAL_OK;
-        break;
-
-    case LED_BLUE:
-        GPIOD->ODR ^= LED_BLUE_MASK;
-        return HAL_OK;
-        break;
-
-    default:
         return HAL_ERROR;
     }
+    GPIOD->ODR ^= led_mask[color];
+    return HAL_OK;
 }
