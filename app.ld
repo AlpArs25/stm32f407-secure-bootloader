@@ -7,6 +7,7 @@ MEMORY
 ENTRY(Reset_Handler)
 
 _estack = ORIGIN(RAM) + LENGTH(RAM);
+_Min_Heap_Size = 0x1000;
 
 SECTIONS
 {
@@ -73,8 +74,13 @@ SECTIONS
         _ebss = .;
     } >RAM
 
-    PROVIDE(_end = .); /* _end may be defined already */
-    PROVIDE(end = .);  /* newlib's _sbrk() looks up `end`, not `_end` */
+    .user_heap_stack :
+    {
+        PROVIDE(_end = .);
+        PROVIDE(end = .);
+        . = . + _Min_Heap_Size;
+        __heap_limit = .;
+    }
 }
 
 ASSERT(_ebss + 1K <= _estack, "RAM overflow: not enough room for stack") /* Check that we have enough room for stack */

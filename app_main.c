@@ -14,6 +14,7 @@ int main(void)
     systick_init(1000);
     HAL_CHECK(led_setup());
     HAL_CHECK(usart_init(USART2, &((USART_Config){.baud_rate = 115200})));
+    setvbuf(stdout, NULL, _IONBF, 0); // debug
     while (1)
     {
         led_toggle(LED_BLUE);
