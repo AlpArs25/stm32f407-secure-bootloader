@@ -2,8 +2,6 @@
 #include "stm32f407xx.h"
 #include "rcc.h"
 
-extern uint32_t SystemCoreClock;
-
 uint32_t hal_rcc_get_pclk1(void)
 {
     uint32_t ppre1 = (RCC->CFGR & RCC_CFGR_PPRE1_MASK) >> RCC_CFGR_PPRE1_POS;

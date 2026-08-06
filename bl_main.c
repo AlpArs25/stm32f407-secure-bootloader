@@ -1,6 +1,7 @@
 #include "stm32f407xx.h"
 #include "core_cm4.h"
 #include <stdint.h>
+#include "led.h"
 
 #define APP_OFFSET 0x08020000
 
@@ -10,6 +11,15 @@ volatile uint32_t g_bl_version __attribute__((used, section(".data.keep"))) = 0x
 
 int main(void)
 {
+    systick_init(1000);
+    led_setup();
+    for(int i = 0; i < 3; i++)
+    {
+        led_toggle(ORANGE);
+        delay_ms(500);
+    }
+    led_off(ORANGE);
+
     void *app_entry;
     uint32_t app_end_stack;
 

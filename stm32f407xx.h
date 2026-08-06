@@ -4,6 +4,8 @@
 
 #define HSI_VALUE 16000000U
 
+extern uint32_t SystemCoreClock;
+
 typedef struct
 {
     volatile uint32_t CR;

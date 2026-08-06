@@ -7,11 +7,14 @@ SIZE := $(CROSS_COMPILE)size
 CFLAGS := -mcpu=cortex-m4 -mthumb -g -ggdb -Wall -Wextra -Wmissing-prototypes -ffunction-sections -fdata-sections
 LDFLAGS := --gc-sections -nostdlib
 
-OBJS := gpio.o core_cm4.o rcc.o stm32f407xx.o usart.o syscalls.o
+OBJS := gpio.o core_cm4.o rcc.o stm32f407xx.o usart.o syscalls.o fault.o led.o
 
-.PHONY: all clean size
+.PHONY: all clean size flash
 
 all: image.bin size
+
+flash: image.bin
+	st-flash write image.bin 0x08000000
 
 size: app.elf bootloader.elf
 	@echo "----- bootloader.elf -----"
@@ -30,11 +33,14 @@ app.bin: app.elf
 bootloader.bin: bootloader.elf
 	$(OBJCOPY) -O binary --pad-to=0x08020000 --gap-fill=0xff $< $@
 
-bootloader.elf: startup_bl.o bl_main.o
+bootloader.elf: startup_bl.o bl_main.o led.o gpio.o core_cm4.o stm32f407xx.o
 	$(LD) $(LDFLAGS) $^ -o $@ -Map=bootloader.map -T bootloader.ld
 
 app.elf: $(OBJS) startup_app.o main.o
 	$(LD) $(LDFLAGS) $^ -o $@ -Map=app.map -T app.ld
+
+main.o: app.main.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f *.o *.bin *.elf *.map

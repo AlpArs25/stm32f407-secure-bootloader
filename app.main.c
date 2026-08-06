@@ -9,18 +9,14 @@
 
 int main(void)
 {
-    /*
+    
     __enable_irq();
-    GPIO_Config cfg = GPIO_CONFIG_DEFAULT;
-    cfg.mode = GPIO_MODE_OUTPUT;
-    HAL_Status status = led_setup();
-    if (status != HAL_OK)
-    {
-        printf("gpio init error");
-        while (1)
-        {
-        }
-    }
-    */
+    systick_init(1000);
+    HAL_CHECK(led_setup());
 
+    while (1) 
+    {
+        led_toggle(BLUE);
+        delay_ms(1000);
+    }
 }

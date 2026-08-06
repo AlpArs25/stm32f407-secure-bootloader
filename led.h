@@ -6,7 +6,8 @@
 #include "hal_common.h"
 #include "gpio.h"
 
-typedef enum {
+typedef enum
+{
     GREEN = 0,
     ORANGE = 1,
     RED = 2,
