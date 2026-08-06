@@ -4,11 +4,24 @@
 #include "stm32f407xx.h"
 #include "hal_common.h"
 
-#define VTOR ((volatile uint32_t *)(0xE000ED08U))
+#define SCB ((SCB_TypeDef *)(0xE000ED00U))
 #define NVIC ((NVIC_TypeDef *)(0xE000E100U))
 #define CPACR ((volatile uint32_t *)(0xE000ED88U))
 
 #define FPU_ENABLE (0xF << 20)
+
+typedef struct
+{
+    volatile uint32_t CPUID;
+    volatile uint32_t ICSR;
+    volatile uint32_t VTOR;
+    volatile uint32_t AIRCR;
+    volatile uint32_t SCR;
+    volatile uint32_t CCR;
+    // Rest
+} SCB_TypeDef;
+
+#define PENDSTCLR (1U << 25)
 
 typedef struct
 {
@@ -27,7 +40,6 @@ typedef struct
     volatile uint32_t LOAD;
     volatile uint32_t VAL;
     volatile uint32_t CALIB;
-
 } SysTick_TypeDef;
 
 #define SYSTICK ((SysTick_TypeDef *)(0xE000E010U))
@@ -36,6 +48,7 @@ typedef struct
 #define SYSTICK_CTRL_TICKINT (1U << 1)
 
 HAL_Status systick_init(uint32_t ticks_per_second);
+void systick_dis(void);
 void SysTick_Handler(void);
 uint32_t get_tick(void);
 void delay_ms(uint32_t ms);

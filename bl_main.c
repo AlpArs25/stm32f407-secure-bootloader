@@ -19,18 +19,20 @@ int main(void)
         delay_ms(500);
     }
     led_off(ORANGE);
+    systick_dis();
 
     void *app_entry;
     uint32_t app_end_stack;
 
     __disable_irq();
 
-    *VTOR = (uint32_t)app_IV;
+    SCB->VTOR = (uint32_t)app_IV;
     __DSB();
     __ISB();
 
     app_end_stack = (*(volatile uint32_t *)(APP_OFFSET));
     app_entry = (void *)(*(volatile uint32_t *)(APP_OFFSET + 0x4));
+
 
     // need one line
     asm volatile("msr msp, %0 \n bx %1" :: "r"(app_end_stack), "r"(app_entry));

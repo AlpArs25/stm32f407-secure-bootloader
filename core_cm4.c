@@ -23,6 +23,13 @@ HAL_Status systick_init(uint32_t ticks_per_second)
     return HAL_OK;
 }
 
+void systick_dis(void)
+{
+    SYSTICK->CTRL &= ~(SYSTICK_CTRL_EN | SYSTICK_CTRL_TICKINT);
+    SYSTICK->VAL = 0;
+    SCB->ICSR = PENDSTCLR;
+}
+
 void SysTick_Handler(void)
 {
     uwTick++;
