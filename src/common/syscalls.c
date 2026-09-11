@@ -4,8 +4,16 @@
 #include "usart.h"
 #include "stm32f407xx.h"
 
+int _isatty(int fd);
 int _write(int fd, char *ptr, int len);
 void *_sbrk(ptrdiff_t incr);
+
+// to flush instantly
+int _isatty(int fd)
+{
+    (void)fd;
+    return 1;
+}
 
 // USART2 default
 int _write(int fd, char *ptr, int len)

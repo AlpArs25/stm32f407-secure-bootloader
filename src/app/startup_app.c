@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include "core_cm4.h"
+#include "stm32f407xx.h"
 
 extern uint32_t _sidata;
 extern uint32_t _sdata;
@@ -240,6 +242,11 @@ void Reset_Handler(void)
         *dst = 0U;
         dst++;
     }
+
+    // fpu enable
+    *CPACR |= FPU_ENABLE;
+    __DSB();
+    __ISB();
 
     main();
 

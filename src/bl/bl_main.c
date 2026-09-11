@@ -7,7 +7,7 @@
 
 const uint32_t * const app_IV = (const uint32_t *)(APP_BASE);
 
-volatile uint32_t g_bl_version __attribute__((used, section(".data.keep"))) = 0x00010000; // Hacky objcopy fix
+// volatile uint32_t g_bl_version __attribute__((used, section(".data.keep"))) = 0x00010000; // Hacky objcopy fix
 
 int main(void)
 {

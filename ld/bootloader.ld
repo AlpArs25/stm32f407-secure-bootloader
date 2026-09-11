@@ -57,7 +57,7 @@ SECTIONS
     {
         . = ALIGN(4);
         _sdata = .;
-        KEEP(*(.data.keep .data.keep.*))
+        /* KEEP(*(.data.keep .data.keep.*)) */
         *(.data)
         *(.data*)
         . = ALIGN(4);
@@ -85,4 +85,4 @@ SECTIONS
     
 }
 
-ASSERT(_ebss + 1K <= _estack, "RAM overflow: not enough room for stack") /* Check that we have enough room for stack */
+ASSERT(__heap_limit <= _estack, "RAM overflow: not enough room for stack") /* Check that we have enough room for stack */

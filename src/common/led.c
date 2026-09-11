@@ -6,6 +6,8 @@
 #include "gpio.h"
 #include "led.h"
 
+static const uint16_t led_mask[] = {LED_GREEN_MASK, LED_ORANGE_MASK, LED_RED_MASK, LED_BLUE_MASK};
+
 HAL_Status led_setup(void)
 {
     static const uint8_t led_pins[4] = {12, 13, 14, 15};
@@ -24,8 +26,6 @@ HAL_Status led_setup(void)
 
     return HAL_OK;
 }
-
-static const uint16_t led_mask[] = {LED_GREEN_MASK, LED_ORANGE_MASK, LED_RED_MASK, LED_BLUE_MASK};
 
 HAL_Status led_on(LED_Color color)
 {

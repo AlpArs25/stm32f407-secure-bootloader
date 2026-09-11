@@ -28,7 +28,7 @@ static HAL_Status usart2_pins_setup(void)
     return HAL_OK;
 }
 
-HAL_Status usart_init(USART_TypeDef *usart, USART_Config *cfg)
+HAL_Status usart_init(USART_TypeDef *usart, const USART_Config *cfg)
 {
     HAL_Status stat;
     if (usart == USART2)
@@ -79,7 +79,7 @@ HAL_Status usart_write_str(USART_TypeDef *usart, const char *text)
     return usart_write(usart, (const uint8_t *)text, strlen(text));
 }
 
-HAL_Status usart_write_byte(USART_TypeDef *usart, const char c)
+HAL_Status usart_write_byte(USART_TypeDef *usart, uint8_t c)
 {
     while (!(usart->SR & USART_SR_TXE))
     {
@@ -92,7 +92,11 @@ HAL_Status usart_write_byte(USART_TypeDef *usart, const char c)
 
 HAL_Status usart_read(USART_TypeDef *usart, uint8_t *buf, size_t len)
 {
-    for (size_t i = 0; i < len - 1; i++)
+    if (!len)
+    {
+        return HAL_ERROR;
+    }
+    for (size_t i = 0; i < len; i++)
     {
         HAL_TRY(usart_read_byte(usart, &buf[i]));
     }
@@ -107,6 +111,7 @@ HAL_Status usart_read_byte(USART_TypeDef *usart, uint8_t *c)
     }
     if (usart->SR & USART_SR_ORE)
     {
+        (void)usart->DR;      // to clear ORE
         return HAL_ERROR;
     }
     *c = (char)(usart->DR & 0xFF);
