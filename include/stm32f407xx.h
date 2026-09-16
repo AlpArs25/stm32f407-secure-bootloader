@@ -62,7 +62,6 @@ typedef struct
 #define USART_SR_RXNE (1 << 5)
 #define USART_SR_ORE (1 << 3)
 
-
 typedef struct
 {
     volatile uint32_t MODER;
@@ -103,3 +102,48 @@ typedef enum
     FPU_IRQn = 81,
     // Fill on demand
 } IRQn_Type;
+
+typedef struct
+{
+    volatile uint32_t ACR;     /* 0x00 access control (latency, ART)  */
+    volatile uint32_t KEYR;    /* 0x04 unlock key register            */
+    volatile uint32_t OPTKEYR; /* 0x08 option byte key register       */
+    volatile uint32_t SR;      /* 0x0C status register                */
+    volatile uint32_t CR;      /* 0x10 control register               */
+    volatile uint32_t OPTCR;   /* 0x14 option control register        */
+} FLASH_TypeDef;
+
+#define FLASH_R_BASE 0x40023C00U
+#define FLASH ((FLASH_TypeDef *)(FLASH_R_BASE))
+
+/* KEYR unlock sequence */
+#define FLASH_KEY1 0x45670123U
+#define FLASH_KEY2 0xCDEF89ABU
+
+/* CR */
+#define FLASH_CR_PG (1U << 0)  /* programming enable          */
+#define FLASH_CR_SER (1U << 1) /* sector erase                */
+#define FLASH_CR_MER (1U << 2) /* mass erase                  */
+#define FLASH_CR_SNB_POS 3U    /* sector number, 5 bits       */
+#define FLASH_CR_SNB_MASK (0x1FU << FLASH_CR_SNB_POS)
+#define FLASH_CR_PSIZE_POS 8U /* program parallelism, 2 bits */
+#define FLASH_CR_PSIZE_MASK (0x3U << FLASH_CR_PSIZE_POS)
+#define FLASH_CR_PSIZE_X8 (0x0U << FLASH_CR_PSIZE_POS)
+#define FLASH_CR_PSIZE_X16 (0x1U << FLASH_CR_PSIZE_POS)
+#define FLASH_CR_PSIZE_X32 (0x2U << FLASH_CR_PSIZE_POS)
+#define FLASH_CR_PSIZE_X64 (0x3U << FLASH_CR_PSIZE_POS)
+#define FLASH_CR_STRT (1U << 16) /* start erase                 */
+#define FLASH_CR_LOCK (1U << 31) /* 1 = locked                  */
+
+/* SR - W1C */
+#define FLASH_SR_EOP (1U << 0)    /* end of operation            */
+#define FLASH_SR_OPERR (1U << 1)  /* operation error             */
+#define FLASH_SR_WRPERR (1U << 4) /* write protection error      */
+#define FLASH_SR_PGAERR (1U << 5) /* programming alignment error */
+#define FLASH_SR_PGPERR (1U << 6) /* parallelism error (PSIZE)   */
+#define FLASH_SR_PGSERR (1U << 7) /* programming sequence error  */
+#define FLASH_SR_BSY (1U << 16)   /* busy                        */
+
+#define FLASH_SR_ERR_MASK (FLASH_SR_OPERR | FLASH_SR_WRPERR |  \
+                           FLASH_SR_PGAERR | FLASH_SR_PGPERR | \
+                           FLASH_SR_PGSERR)

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "fault.h"
+/* Declared, not #included: keeps this base header free of a dependency on
+ * the fault module, which sits above the drivers. See fault.h. */
+void fault_blink(void);
 
 typedef enum
 {

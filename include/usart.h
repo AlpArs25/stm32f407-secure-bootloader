@@ -15,3 +15,5 @@ HAL_Status usart_write_str(USART_TypeDef *usart, const char *text);
 HAL_Status usart_write_byte(USART_TypeDef *usart, uint8_t c);
 HAL_Status usart_read(USART_TypeDef *usart, uint8_t *buf, size_t len);
 HAL_Status usart_read_byte(USART_TypeDef *usart, uint8_t *c);
+HAL_Status usart_read_byte_timeout(USART_TypeDef *usart, uint8_t *c, uint32_t timeout_ms);
+HAL_Status usart_read_timeout(USART_TypeDef *usart, uint8_t *buf, size_t len, uint32_t timeout_ms);

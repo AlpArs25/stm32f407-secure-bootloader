@@ -5,6 +5,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "rcc.h"
+#include "core_cm4.h"
 
 // We will have a default USART2 setup for simplicity
 static HAL_Status usart2_pins_setup(void)
@@ -115,5 +116,48 @@ HAL_Status usart_read_byte(USART_TypeDef *usart, uint8_t *c)
         return HAL_ERROR;
     }
     *c = (char)(usart->DR & 0xFF);
+    return HAL_OK;
+}
+
+HAL_Status usart_read_byte_timeout(USART_TypeDef *usart, uint8_t *c, uint32_t timeout_ms)
+{
+    if (c == NULL)
+    {
+        return HAL_ERROR;
+    }
+
+    uint32_t start = get_tick();
+
+    while (!(usart->SR & USART_SR_RXNE))
+    {
+        /* Unsigned subtraction, so this stays correct across the
+         * 2^32 ms tick rollover. Never compare get_tick() > start+ms. */
+        if ((get_tick() - start) >= timeout_ms)
+        {
+            return HAL_TIMEOUT;
+        }
+    }
+
+    if (usart->SR & USART_SR_ORE)
+    {
+        (void)usart->DR;    /* read SR then DR clears ORE */
+        return HAL_ERROR;   /* stream desynced; caller should resync */
+    }
+
+    *c = (uint8_t)(usart->DR & 0xFFU);
+    return HAL_OK;
+}
+
+HAL_Status usart_read_timeout(USART_TypeDef *usart, uint8_t *buf, size_t len,
+                              uint32_t timeout_ms)
+{
+    if (buf == NULL || len == 0U)
+    {
+        return HAL_ERROR;
+    }
+    for (size_t i = 0; i < len; i++)
+    {
+        HAL_TRY(usart_read_byte_timeout(usart, &buf[i], timeout_ms));
+    }
     return HAL_OK;
 }
